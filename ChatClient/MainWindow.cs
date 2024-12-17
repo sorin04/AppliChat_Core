@@ -195,6 +195,7 @@ namespace ChatClient
         {
 
         }
+        //
 
         private Color couleurChoisie = Color.Black;
 
