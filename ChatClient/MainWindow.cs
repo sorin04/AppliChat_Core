@@ -217,11 +217,46 @@ namespace ChatClient
             openFileDialog.Title = "Sélectionner un fichier";
             if(openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                String FilesPath=openFileDialog.FileName;
+                String filePath=openFileDialog.FileName;
+                byte[] fileData = File.ReadAllBytes(filePath);
+                string fileType = GetFileType(filePath);
+                SendFileToServer(fileData, fileType);
 
 
             }
 
+        }
+        //Methode qui determine le type de fichier en fonction de son extension
+        private string GetFileType(string filePath)
+        {
+            string extension = Path.GetExtension(filePath).ToLower();
+
+            if (extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".gif")
+                return "image";
+            else if (extension == ".mp3")
+                return "mp3";
+            else
+                return "unknown";
+        }
+        // Methode envoie le fichier sous forme de message encodé en Base64 au serveur
+        private void SendFileToServer(byte[] fileData, string fileType)
+        {
+            if (comm != null)
+            {
+                string base64File = Convert.ToBase64String(fileData);
+                string fileMessage = $"FILE|{fileType}|{base64File}";
+
+                
+                this.comm.Ecrire(fileMessage);
+
+                
+                OutilsChat.Message msg = new OutilsChat.Message(0, "Fichier envoyé : " + fileType);
+                this.AjoutMessage(msg, couleurChoisie);
+            }
+            else
+            {
+                AfficherErreur("Vous n'êtes pas connecté au serveur !");
+            }
         }
 
     }
