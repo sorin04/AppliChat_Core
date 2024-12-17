@@ -55,10 +55,10 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(493, 454);
-            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Location = new Point(704, 757);
+            label3.Margin = new Padding(6, 0, 6, 0);
             label3.Name = "label3";
-            label3.Size = new Size(53, 15);
+            label3.Size = new Size(82, 25);
             label3.TabIndex = 4;
             label3.Text = "Message";
             // 
@@ -73,20 +73,21 @@
             groupBox1.Controls.Add(numericPort);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(buttonStart);
-            groupBox1.Location = new Point(14, 14);
-            groupBox1.Margin = new Padding(4);
+            groupBox1.Location = new Point(20, 23);
+            groupBox1.Margin = new Padding(6, 7, 6, 7);
             groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new Padding(4);
-            groupBox1.Size = new Size(536, 94);
+            groupBox1.Padding = new Padding(6, 7, 6, 7);
+            groupBox1.Size = new Size(766, 157);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Configuration";
             // 
             // button1
             // 
-            button1.Location = new Point(7, 64);
+            button1.Location = new Point(10, 107);
+            button1.Margin = new Padding(4, 5, 4, 5);
             button1.Name = "button1";
-            button1.Size = new Size(75, 23);
+            button1.Size = new Size(107, 38);
             button1.TabIndex = 6;
             button1.Text = "Couleurs";
             button1.UseVisualStyleBackColor = true;
@@ -95,27 +96,27 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(218, 59);
-            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Location = new Point(311, 98);
+            label4.Margin = new Padding(6, 0, 6, 0);
             label4.Name = "label4";
-            label4.Size = new Size(38, 15);
+            label4.Size = new Size(58, 25);
             label4.TabIndex = 5;
             label4.Text = "Alias :";
             // 
             // textAlias
             // 
-            textAlias.Location = new Point(287, 55);
-            textAlias.Margin = new Padding(4);
+            textAlias.Location = new Point(410, 92);
+            textAlias.Margin = new Padding(6, 7, 6, 7);
             textAlias.Name = "textAlias";
-            textAlias.Size = new Size(116, 23);
+            textAlias.Size = new Size(164, 31);
             textAlias.TabIndex = 4;
             // 
             // buttonStop
             // 
-            buttonStop.Location = new Point(414, 24);
-            buttonStop.Margin = new Padding(4);
+            buttonStop.Location = new Point(591, 40);
+            buttonStop.Margin = new Padding(6, 7, 6, 7);
             buttonStop.Name = "buttonStop";
-            buttonStop.Size = new Size(88, 26);
+            buttonStop.Size = new Size(126, 43);
             buttonStop.TabIndex = 3;
             buttonStop.Text = "Stop";
             buttonStop.UseVisualStyleBackColor = true;
@@ -127,30 +128,30 @@
             ipAddressControl1.BackColor = SystemColors.Control;
             ipAddressControl1.IPAddress = "0.0.0.0";
             ipAddressControl1.IsSubnetMask = false;
-            ipAddressControl1.Location = new Point(66, 24);
-            ipAddressControl1.Margin = new Padding(4, 5, 4, 5);
+            ipAddressControl1.Location = new Point(94, 40);
+            ipAddressControl1.Margin = new Padding(6, 8, 6, 8);
             ipAddressControl1.Name = "ipAddressControl1";
-            ipAddressControl1.Size = new Size(178, 23);
+            ipAddressControl1.Size = new Size(254, 38);
             ipAddressControl1.TabIndex = 0;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(7, 28);
-            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Location = new Point(10, 47);
+            label2.Margin = new Padding(6, 0, 6, 0);
             label2.Name = "label2";
-            label2.Size = new Size(46, 15);
+            label2.Size = new Size(71, 25);
             label2.TabIndex = 2;
             label2.Text = "Serveur";
             // 
             // numericPort
             // 
-            numericPort.Location = new Point(312, 25);
-            numericPort.Margin = new Padding(4);
+            numericPort.Location = new Point(446, 42);
+            numericPort.Margin = new Padding(6, 7, 6, 7);
             numericPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
             numericPort.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericPort.Name = "numericPort";
-            numericPort.Size = new Size(91, 23);
+            numericPort.Size = new Size(130, 31);
             numericPort.TabIndex = 1;
             numericPort.TextAlign = HorizontalAlignment.Right;
             numericPort.Value = new decimal(new int[] { 1, 0, 0, 0 });
@@ -158,19 +159,19 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(265, 28);
-            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Location = new Point(379, 47);
+            label1.Margin = new Padding(6, 0, 6, 0);
             label1.Name = "label1";
-            label1.Size = new Size(38, 15);
+            label1.Size = new Size(58, 25);
             label1.TabIndex = 1;
             label1.Text = "Port : ";
             // 
             // buttonStart
             // 
-            buttonStart.Location = new Point(414, 24);
-            buttonStart.Margin = new Padding(4);
+            buttonStart.Location = new Point(591, 40);
+            buttonStart.Margin = new Padding(6, 7, 6, 7);
             buttonStart.Name = "buttonStart";
-            buttonStart.Size = new Size(88, 26);
+            buttonStart.Size = new Size(126, 43);
             buttonStart.TabIndex = 2;
             buttonStart.Text = "Start";
             buttonStart.UseVisualStyleBackColor = true;
@@ -179,32 +180,32 @@
             // richMessages
             // 
             richMessages.BackColor = SystemColors.ActiveCaption;
-            richMessages.Location = new Point(14, 114);
-            richMessages.Margin = new Padding(4);
+            richMessages.Location = new Point(20, 190);
+            richMessages.Margin = new Padding(6, 7, 6, 7);
             richMessages.Name = "richMessages";
             richMessages.ReadOnly = true;
-            richMessages.Size = new Size(537, 294);
+            richMessages.Size = new Size(765, 487);
             richMessages.TabIndex = 1;
             richMessages.Text = "";
             // 
             // textMessage
             // 
             textMessage.Enabled = false;
-            textMessage.Location = new Point(14, 454);
-            textMessage.Margin = new Padding(4);
+            textMessage.Location = new Point(20, 757);
+            textMessage.Margin = new Padding(6, 7, 6, 7);
             textMessage.Multiline = true;
             textMessage.Name = "textMessage";
             textMessage.ScrollBars = ScrollBars.Both;
-            textMessage.Size = new Size(463, 104);
+            textMessage.Size = new Size(660, 171);
             textMessage.TabIndex = 2;
             // 
             // buttonEnvoi
             // 
             buttonEnvoi.Enabled = false;
-            buttonEnvoi.Location = new Point(486, 472);
-            buttonEnvoi.Margin = new Padding(4);
+            buttonEnvoi.Location = new Point(694, 787);
+            buttonEnvoi.Margin = new Padding(6, 7, 6, 7);
             buttonEnvoi.Name = "buttonEnvoi";
-            buttonEnvoi.Size = new Size(66, 86);
+            buttonEnvoi.Size = new Size(94, 143);
             buttonEnvoi.TabIndex = 3;
             buttonEnvoi.Text = "Envoyer";
             buttonEnvoi.UseVisualStyleBackColor = true;
@@ -214,24 +215,25 @@
             // 
             statusBar.ImageScalingSize = new Size(20, 20);
             statusBar.Items.AddRange(new ToolStripItem[] { statusBarInfo });
-            statusBar.Location = new Point(0, 574);
+            statusBar.Location = new Point(0, 971);
             statusBar.Name = "statusBar";
-            statusBar.Padding = new Padding(1, 0, 17, 0);
-            statusBar.Size = new Size(564, 22);
+            statusBar.Padding = new Padding(1, 0, 24, 0);
+            statusBar.Size = new Size(806, 22);
             statusBar.TabIndex = 5;
             statusBar.Text = "statusStrip1";
             // 
             // statusBarInfo
             // 
             statusBarInfo.Name = "statusBarInfo";
-            statusBarInfo.Size = new Size(0, 17);
+            statusBarInfo.Size = new Size(0, 15);
             // 
             // button2
             // 
             button2.BackgroundImage = (Image)resources.GetObject("button2.BackgroundImage");
-            button2.Location = new Point(403, 424);
+            button2.Location = new Point(704, 679);
+            button2.Margin = new Padding(4, 5, 4, 5);
             button2.Name = "button2";
-            button2.Size = new Size(124, 23);
+            button2.Size = new Size(102, 79);
             button2.TabIndex = 6;
             button2.Text = "Pièces_J";
             button2.UseVisualStyleBackColor = true;
@@ -239,9 +241,9 @@
             // 
             // MainWindow
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(564, 596);
+            ClientSize = new Size(806, 993);
             Controls.Add(button2);
             Controls.Add(statusBar);
             Controls.Add(buttonEnvoi);
@@ -249,7 +251,7 @@
             Controls.Add(textMessage);
             Controls.Add(richMessages);
             Controls.Add(groupBox1);
-            Margin = new Padding(4);
+            Margin = new Padding(6, 7, 6, 7);
             MaximizeBox = false;
             Name = "MainWindow";
             Text = "Client de Tchatche";
