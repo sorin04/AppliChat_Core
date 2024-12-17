@@ -120,7 +120,7 @@ namespace ChatClient
             System.Drawing.Font currentFont = richMessages.SelectionFont;
             System.Drawing.FontStyle newFontStyle;
             newFontStyle = FontStyle.Bold;
-            richMessages.SelectionFont = new Font( currentFont, newFontStyle );
+            richMessages.SelectionFont = new Font(currentFont, newFontStyle);
             //
             beforeAppend = this.richMessages.TextLength;
             this.richMessages.AppendText(msg.Texte + Environment.NewLine);
@@ -172,12 +172,22 @@ namespace ChatClient
         private void buttonEnvoi_Click(object sender, EventArgs e)
         {
             if (comm != null)
+
             {
-                this.comm.Ecrire(this.textMessage.Text);
-                //
+                string messageText = this.textMessage.Text;
+                if (string.IsNullOrWhiteSpace(messageText))
+                {
+                    return;
+                }
+                string colorRGB = $"{couleurChoisie.R},{couleurChoisie.G},{couleurChoisie.B}";
+                string fullMessage = $"{messageText}|{colorRGB}";
+                this.comm.Ecrire(fullMessage);
+
+
                 OutilsChat.Message newMessage = new OutilsChat.Message(0, this.textMessage.Text);
                 newMessage.Envoi(this.textAlias.Text);
-                this.AjoutMessage(newMessage, Color.Black);
+                this.AjoutMessage(newMessage, couleurChoisie);
+                this.textMessage.Clear();
             }
         }
 
@@ -185,5 +195,19 @@ namespace ChatClient
         {
 
         }
+
+        private Color couleurChoisie = Color.Black;
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                couleurChoisie = colorDialog.Color;
+                button1.BackColor = couleurChoisie;
+            }
+        }
+
+        
     }
 }
