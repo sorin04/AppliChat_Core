@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             Label label3;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             groupBox1 = new GroupBox();
             button1 = new Button();
             label4 = new Label();
@@ -44,6 +45,7 @@
             buttonEnvoi = new Button();
             statusBar = new StatusStrip();
             statusBarInfo = new ToolStripStatusLabel();
+            button2 = new Button();
             label3 = new Label();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericPort).BeginInit();
@@ -86,7 +88,7 @@
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
             button1.TabIndex = 6;
-            button1.Text = "button1";
+            button1.Text = "Couleurs";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
@@ -176,11 +178,12 @@
             // 
             // richMessages
             // 
+            richMessages.BackColor = SystemColors.ActiveCaption;
             richMessages.Location = new Point(14, 114);
             richMessages.Margin = new Padding(4);
             richMessages.Name = "richMessages";
             richMessages.ReadOnly = true;
-            richMessages.Size = new Size(536, 332);
+            richMessages.Size = new Size(537, 294);
             richMessages.TabIndex = 1;
             richMessages.Text = "";
             // 
@@ -223,11 +226,23 @@
             statusBarInfo.Name = "statusBarInfo";
             statusBarInfo.Size = new Size(0, 17);
             // 
+            // button2
+            // 
+            button2.BackgroundImage = (Image)resources.GetObject("button2.BackgroundImage");
+            button2.Location = new Point(403, 424);
+            button2.Name = "button2";
+            button2.Size = new Size(124, 23);
+            button2.TabIndex = 6;
+            button2.Text = "Pièces_J";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
+            // 
             // MainWindow
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(564, 596);
+            Controls.Add(button2);
             Controls.Add(statusBar);
             Controls.Add(buttonEnvoi);
             Controls.Add(label3);
@@ -265,6 +280,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textAlias;
         private Button button1;
+        private Button button2;
     }
 }
 

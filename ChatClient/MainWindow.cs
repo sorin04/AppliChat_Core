@@ -210,6 +210,35 @@ namespace ChatClient
             }
         }
 
-        
+        private void button2_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "Sélectionner une image ou une vidéo";
+            openFileDialog.Filter = "Images (*.jpg; *.jpeg; *.png; *.gif)|*.jpg;*.jpeg;*.png;*.gif|Vidéos (*.mp4)|*.mp4|Tous les fichiers (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = openFileDialog.FileName;
+
+                // Vérifier si le fichier est valide (non vide, existe)
+                if (System.IO.File.Exists(filePath))
+                {
+                    // Afficher un message pour notifier que le fichier est envoyé
+                    OutilsChat.Message msg = new OutilsChat.Message(0, "Envoi du fichier : " + System.IO.Path.GetFileName(filePath));
+                    msg.Envoi(this.textAlias.Text);
+                    this.AjoutMessage(msg, this.couleurChoisie); // Affiche le message de notification dans la fenêtre
+
+                    // Envoyer le fichier au serveur
+                    if (comm != null)
+                    {
+                        comm.EcrireFichier(filePath); // Envoie du fichier à travers la méthode EcrireFichier dans votre classe ClientReseau
+                    }
+                }
+                else
+                {
+                    this.AfficherErreur("Le fichier sélectionné est invalide.");
+                }
+            }
+
+        }
     }
 }
