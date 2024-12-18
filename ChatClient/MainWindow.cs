@@ -200,12 +200,12 @@ namespace ChatClient
             {
                 string filePath = openFileDialog.FileName;
                 byte[] fileData = File.ReadAllBytes(filePath);
-                string fileType = GetFileType(filePath);
+                string fileType = obtenirTypeFichier(filePath);
 
                 if (fileType == "image")
                 {
                     DisplayImage(fileData);
-                    SendFileToServer(fileData, fileType);
+                    
                 }
                 else
                 {
@@ -214,7 +214,7 @@ namespace ChatClient
             }
         }
 
-        private string GetFileType(string filePath)
+        private string obtenirTypeFichier(string filePath)
         {
             string extension = Path.GetExtension(filePath).ToLower();
 
@@ -226,7 +226,7 @@ namespace ChatClient
                 return "inconnu";
         }
 
-        private void SendFileToServer(byte[] fileData, string fileType)
+        private void EnvoyerFichierAuServeur(byte[] fileData, string fileType)
         {
             if (comm != null)
             {
@@ -261,7 +261,7 @@ namespace ChatClient
                 {
                     pictureBox1.Image.Save(ms, pictureBox1.Image.RawFormat);
                     byte[] imageData = ms.ToArray();
-                    SendFileToServer(imageData, "image");
+                    EnvoyerFichierAuServeur(imageData, "image");
 
                     OutilsChat.Message newMessage = new OutilsChat.Message(0, "Image envoyée");
                     this.AjoutMessage(newMessage, couleurChoisie);

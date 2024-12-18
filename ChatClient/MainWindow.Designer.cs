@@ -270,7 +270,7 @@
             button3_Envoyer.TabIndex = 9;
             button3_Envoyer.Text = "Envoyer";
             button3_Envoyer.UseVisualStyleBackColor = true;
-            button3_Envoyer.Click += button3_Envoyer_Click;
+            button3_Envoyer.Click += buttonEnvoi_Click;
             // 
             // button3_Clear
             // 
