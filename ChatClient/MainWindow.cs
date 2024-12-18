@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,43 +17,39 @@ namespace ChatClient
         private GestionChat comm;
         private IniFile configFile;
         private Dictionary<int, Color> clients;
+        private Color couleurChoisie = Color.Black;
 
         public MainWindow()
         {
             InitializeComponent();
             comm = null;
-            //
             configFile = new IniFile(AppDomain.CurrentDomain.BaseDirectory + "config.ini");
             int port = configFile.ReadValue("Server", "Port", 18);
             String ipAddress = configFile.ReadValue("Server", "IPAddress", "127.0.0.1");
             String alias = configFile.ReadValue("User", "Alias", "JohnDoe");
-            //
             this.numericPort.Value = port;
             this.ipAddressControl1.IPAddress = ipAddress;
             this.textAlias.Text = alias;
-            //
             this.Text += " " + Constants.APP_VERSION;
             this.clients = new Dictionary<int, Color>();
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
-            // Démarrage de connection
             if (comm == null)
             {
                 configFile = new IniFile(AppDomain.CurrentDomain.BaseDirectory + "config.ini");
                 configFile.WriteValue("Server", "Port", (int)this.numericPort.Value);
                 configFile.WriteValue("Server", "IPAddress", this.ipAddressControl1.IPAddress);
                 configFile.WriteValue("User", "Alias", this.textAlias.Text);
-                //
+
                 this.comm = new GestionChat(this.ipAddressControl1.IPAddress, (int)this.numericPort.Value, this.textAlias.Text);
                 this.comm.OnMessageReceived += new OnMessageReceived(this.OnMessageReceived);
                 this.comm.OnClientDisconnected += new OnClientDisconnected(this.OnClientDisconnected);
                 this.comm.Start();
-                //
+
                 if (this.comm.Connected)
                 {
-                    //
                     this.ipAddressControl1.Enabled = false;
                     this.numericPort.Enabled = false;
                     this.textAlias.Enabled = false;
@@ -72,14 +69,11 @@ namespace ChatClient
 
         private void OnClientDisconnected(GestionChat sender)
         {
-            // !!! ATTENTION !!!
-            // A ce stade on est "encore" dans le contexte d'execution du Thread Réseau
             this.Invoke((OnClientDisconnected)this.DoClientDisconnected, new object[] { sender });
         }
 
         private void DoClientDisconnected(GestionChat sender)
         {
-            // On remet tout en place
             this.ipAddressControl1.Enabled = true;
             this.numericPort.Enabled = true;
             this.textAlias.Enabled = true;
@@ -93,35 +87,38 @@ namespace ChatClient
 
         private void OnMessageReceived(GestionChat sender, OutilsChat.Message message)
         {
-            // !!! ATTENTION !!!
-            // A ce stade on est "encore" dans le contexte d'execution du Thread Réseau
             this.Invoke((OnMessageReceived)this.DoMessageReceived, new object[] { sender, message });
         }
 
         private void DoMessageReceived(GestionChat sender, OutilsChat.Message message)
         {
-            // Client déjà connu ?
-            if (!clients.ContainsKey(message.Id))
+            if (message.Texte.StartsWith("FILE|"))
             {
-                clients.Add(message.Id, this.RandomColor());
+                string[] parts = message.Texte.Split('|');
+                string fileType = parts[1];
+                string base64Image = parts[2];
+
+                if (fileType == "image")
+                {
+                    byte[] imageData = Convert.FromBase64String(base64Image);
+                    AjouterImageRichTextBox(imageData);
+                }
             }
-            //
-            this.AjoutMessage(message, this.clients[message.Id]);
+            else
+            {
+                this.AjoutMessage(message, this.clients[message.Id]);
+            }
         }
 
         private void AjoutMessage(OutilsChat.Message msg, Color clr)
         {
-            //
             int beforeAppend = this.richMessages.TextLength;
             this.richMessages.AppendText(msg.Param1 + " - " + DateTime.Now.ToString() + Environment.NewLine);
             int afterAppend = this.richMessages.TextLength;
             this.richMessages.Select(beforeAppend, afterAppend - beforeAppend);
             this.richMessages.SelectionColor = clr;
-            System.Drawing.Font currentFont = richMessages.SelectionFont;
-            System.Drawing.FontStyle newFontStyle;
-            newFontStyle = FontStyle.Bold;
-            richMessages.SelectionFont = new Font(currentFont, newFontStyle);
-            //
+            this.richMessages.SelectionFont = new Font(this.richMessages.SelectionFont, FontStyle.Bold);
+
             beforeAppend = this.richMessages.TextLength;
             this.richMessages.AppendText(msg.Texte + Environment.NewLine);
             afterAppend = this.richMessages.TextLength;
@@ -151,10 +148,8 @@ namespace ChatClient
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // Fermeture !! Arret du client
             if (comm != null)
             {
-                // Si on laisse le traitement de l'evenement, on va revenir vers la fenetre alors qu'elle n'existera plus
                 this.comm.OnClientDisconnected = null;
                 this.comm.Stop();
             }
@@ -162,7 +157,6 @@ namespace ChatClient
 
         private void buttonStop_Click(object sender, EventArgs e)
         {
-            // Fermeture !! Arret du client
             if (comm != null)
             {
                 this.comm.Stop();
@@ -172,17 +166,13 @@ namespace ChatClient
         private void buttonEnvoi_Click(object sender, EventArgs e)
         {
             if (comm != null)
-
             {
                 string messageText = this.textMessage.Text;
-                if (string.IsNullOrWhiteSpace(messageText))
-                {
-                    return;
-                }
+                if (string.IsNullOrWhiteSpace(messageText)) return;
+
                 string colorRGB = $"{couleurChoisie.R},{couleurChoisie.G},{couleurChoisie.B}";
                 string fullMessage = $"{messageText}|{colorRGB}";
                 this.comm.Ecrire(fullMessage);
-
 
                 OutilsChat.Message newMessage = new OutilsChat.Message(0, this.textMessage.Text);
                 newMessage.Envoi(this.textAlias.Text);
@@ -190,15 +180,6 @@ namespace ChatClient
                 this.textMessage.Clear();
             }
         }
-
-        private void textMessage_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-        //
-        //
-
-        private Color couleurChoisie = Color.Black;
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -217,15 +198,22 @@ namespace ChatClient
             openFileDialog.Title = "Sélectionner un fichier";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                String filePath = openFileDialog.FileName;
+                string filePath = openFileDialog.FileName;
                 byte[] fileData = File.ReadAllBytes(filePath);
                 string fileType = GetFileType(filePath);
-                DisplayImage(fileData);
 
+                if (fileType == "image")
+                {
+                    DisplayImage(fileData);
+                    SendFileToServer(fileData, fileType);
+                }
+                else
+                {
+                    AfficherErreur("Seul les fichiers image peuvent être sélectionnés.");
+                }
             }
-
         }
-        //Methode qui determine le type de fichier en fonction de son extension
+
         private string GetFileType(string filePath)
         {
             string extension = Path.GetExtension(filePath).ToLower();
@@ -235,20 +223,16 @@ namespace ChatClient
             else if (extension == ".mp3")
                 return "mp3";
             else
-                return "unknown";
-
+                return "inconnu";
         }
-        // Methode envoie le fichier sous forme de message encodé en Base64 au serveur
+
         private void SendFileToServer(byte[] fileData, string fileType)
         {
             if (comm != null)
             {
                 string base64File = Convert.ToBase64String(fileData);
                 string fileMessage = $"FILE|{fileType}|{base64File}";
-
-
                 this.comm.Ecrire(fileMessage);
-
 
                 OutilsChat.Message msg = new OutilsChat.Message(0, "Fichier envoyé : " + fileType);
                 this.AjoutMessage(msg, couleurChoisie);
@@ -258,24 +242,6 @@ namespace ChatClient
                 AfficherErreur("Vous n'êtes pas connecté au serveur !");
             }
         }
-        private void SendImageToServer(byte[] imageData)
-        {
-            if (comm != null)
-            {
-                string base64Image = Convert.ToBase64String(imageData);
-                string fileMessage = $"FILE|image|{base64Image}";
-
-                this.comm.Ecrire(fileMessage);
-
-                OutilsChat.Message msg = new OutilsChat.Message(0, "Image envoyée");
-                this.AjoutMessage(msg, couleurChoisie);
-            }
-            else
-            {
-                AfficherErreur("Vous n'êtes pas connecté au serveur !");
-            }
-        }
-
 
         private void DisplayImage(byte[] imageData)
         {
@@ -287,51 +253,74 @@ namespace ChatClient
             }
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
+        private void button3_Envoyer_Click(object sender, EventArgs e)
         {
+            if (pictureBox1.Image != null)
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    pictureBox1.Image.Save(ms, pictureBox1.Image.RawFormat);
+                    byte[] imageData = ms.ToArray();
+                    SendFileToServer(imageData, "image");
 
+                    OutilsChat.Message newMessage = new OutilsChat.Message(0, "Image envoyée");
+                    this.AjoutMessage(newMessage, couleurChoisie);
+                    pictureBox1.Image = null;
+                }
+            }
+            else
+            {
+                AfficherErreur("Aucune image à envoyer.");
+            }
+        }
 
+        private void button3_Clear_Click(object sender, EventArgs e)
+        {
+            if (pictureBox1.Image != null)
+            {
+                pictureBox1.Image = null;
+                AfficherInfo("L'image a été supprimée.");
+            }
+            else
+            {
+                AfficherErreur("Aucune image à supprimer.");
+            }
+        }
+
+        private void AjouterImageRichTextBox(byte[] imageData)
+        {
+            if (imageData == null || imageData.Length == 0)
+            {
+                AfficherErreur("Les données de l'image sont invalides !");
+                return;
+            }
+
+            try
+            {
+                using (MemoryStream ms = new MemoryStream(imageData))
+                {
+                    Image image = Image.FromStream(ms);
+                    Clipboard.SetImage(image);
+
+                    if (Clipboard.ContainsImage())
+                    {
+                        richMessages.Paste();
+                    }
+                    else
+                    {
+                        AfficherErreur("Impossible d'insérer l'image dans la boîte de messages.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AfficherErreur($"Erreur lors de l'ajout de l'image : {ex.Message}");
+            }
         }
 
         private void groupBox2_Enter(object sender, EventArgs e)
         {
 
         }
-
-        private void button3_Envoyer_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Images (*.jpg; *.jpeg; *.png; *.gif)|*.jpg;*.jpeg;*.png;*.gif|MP3 Files (*.mp3)|*.mp3|All Files (*.*)|*.*";
-            openFileDialog.Title = "Sélectionner un fichier";
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-
-                string filePath = openFileDialog.FileName;
-                byte[] fileData = File.ReadAllBytes(filePath);
-                string fileType = GetFileType(filePath);
-                string fileInfoMessage = $"Fichier sélectionné : {Path.GetFileName(filePath)} ({fileType})";
-                OutilsChat.Message newMessage = new OutilsChat.Message(0, fileInfoMessage);
-                this.AjoutMessage(newMessage, couleurChoisie);
-                SendFileToServer(fileData, fileType);
-
-            }
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            if (pictureBox1.Image != null)
-            {
-
-            }
-
-            
-        }
-
-        private void richMessages_TextChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }
-

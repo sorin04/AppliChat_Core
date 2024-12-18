@@ -192,7 +192,6 @@
             richMessages.Size = new Size(765, 487);
             richMessages.TabIndex = 1;
             richMessages.Text = "";
-            richMessages.TextChanged += richMessages_TextChanged;
             // 
             // textMessage
             // 
@@ -252,7 +251,6 @@
             pictureBox1.Size = new Size(385, 250);
             pictureBox1.TabIndex = 7;
             pictureBox1.TabStop = false;
-            pictureBox1.Click += pictureBox1_Click;
             // 
             // groupBox2
             // 
@@ -282,7 +280,7 @@
             button3_Clear.TabIndex = 10;
             button3_Clear.Text = "Clear";
             button3_Clear.UseVisualStyleBackColor = true;
-            button3_Clear.Click += button3_Click;
+            button3_Clear.Click += button3_Clear_Click;
             // 
             // MainWindow
             // 
