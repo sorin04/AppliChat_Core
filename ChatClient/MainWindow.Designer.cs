@@ -46,10 +46,15 @@
             statusBar = new StatusStrip();
             statusBarInfo = new ToolStripStatusLabel();
             button2 = new Button();
+            pictureBox1 = new PictureBox();
+            groupBox2 = new GroupBox();
+            button3_Envoyer = new Button();
+            button3_Clear = new Button();
             label3 = new Label();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericPort).BeginInit();
             statusBar.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // label3
@@ -187,6 +192,7 @@
             richMessages.Size = new Size(765, 487);
             richMessages.TabIndex = 1;
             richMessages.Text = "";
+            richMessages.TextChanged += richMessages_TextChanged;
             // 
             // textMessage
             // 
@@ -218,7 +224,7 @@
             statusBar.Location = new Point(0, 971);
             statusBar.Name = "statusBar";
             statusBar.Padding = new Padding(1, 0, 24, 0);
-            statusBar.Size = new Size(806, 22);
+            statusBar.Size = new Size(1245, 22);
             statusBar.TabIndex = 5;
             statusBar.Text = "statusStrip1";
             // 
@@ -233,17 +239,60 @@
             button2.Location = new Point(704, 679);
             button2.Margin = new Padding(4, 5, 4, 5);
             button2.Name = "button2";
-            button2.Size = new Size(102, 79);
+            button2.Size = new Size(89, 79);
             button2.TabIndex = 6;
             button2.Text = "Pièces_J";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
+            // pictureBox1
+            // 
+            pictureBox1.Location = new Point(848, 37);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(385, 250);
+            pictureBox1.TabIndex = 7;
+            pictureBox1.TabStop = false;
+            pictureBox1.Click += pictureBox1_Click;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Location = new Point(839, 505);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(372, 268);
+            groupBox2.TabIndex = 8;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Fichier_MP3_recu";
+            groupBox2.Enter += groupBox2_Enter;
+            // 
+            // button3_Envoyer
+            // 
+            button3_Envoyer.Location = new Point(848, 293);
+            button3_Envoyer.Name = "button3_Envoyer";
+            button3_Envoyer.Size = new Size(112, 34);
+            button3_Envoyer.TabIndex = 9;
+            button3_Envoyer.Text = "Envoyer";
+            button3_Envoyer.UseVisualStyleBackColor = true;
+            button3_Envoyer.Click += button3_Envoyer_Click;
+            // 
+            // button3_Clear
+            // 
+            button3_Clear.Location = new Point(1012, 293);
+            button3_Clear.Name = "button3_Clear";
+            button3_Clear.Size = new Size(112, 34);
+            button3_Clear.TabIndex = 10;
+            button3_Clear.Text = "Clear";
+            button3_Clear.UseVisualStyleBackColor = true;
+            button3_Clear.Click += button3_Click;
+            // 
             // MainWindow
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(806, 993);
+            ClientSize = new Size(1245, 993);
+            Controls.Add(button3_Clear);
+            Controls.Add(button3_Envoyer);
+            Controls.Add(groupBox2);
+            Controls.Add(pictureBox1);
             Controls.Add(button2);
             Controls.Add(statusBar);
             Controls.Add(buttonEnvoi);
@@ -261,6 +310,7 @@
             ((System.ComponentModel.ISupportInitialize)numericPort).EndInit();
             statusBar.ResumeLayout(false);
             statusBar.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -283,6 +333,10 @@
         private System.Windows.Forms.TextBox textAlias;
         private Button button1;
         private Button button2;
+        private PictureBox pictureBox1;
+        private GroupBox groupBox2;
+        private Button button3_Envoyer;
+        private Button button3_Clear;
     }
 }
 

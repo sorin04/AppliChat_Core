@@ -86,49 +86,79 @@ namespace ChatServer
         private void Dispatch()
         {
             WaitHandle[] attente = new WaitHandle[2];
-            //
             attente[0] = this.signalementMessage;
             attente[1] = this.demandeSortie;
+
             while (true)
             {
-                // On attend, soit le Signalement de Message, soit le Demande de Fermeture du Serveur
+                // Attente d'un signal : message ou demande de sortie
                 int who = AutoResetEvent.WaitAny(attente, Timeout.Infinite);
+
                 if (who == 1)
                 {
+                    // Sortie demandée, fermeture des clients
                     this.accessClients.WaitOne();
-                    // Sortie Demandée ! Ciao
                     foreach (ClientReseau clt in this.clients)
                     {
-                        // On ferme les clients réseaux
                         clt.Stop();
                     }
                     this.accessClients.ReleaseMutex();
                     break;
                 }
-                // Il y a un message en attente de Dispatch
-                // On accède à la pile des messages
+
+                // Traitement des messages
                 this.accessMessages.WaitOne();
-                // On lit le message en pile
-                OutilsChat.Message msg = null;
+
+                OutilsChat.Message msg;
                 while (this.messages.Count > 0)
                 {
                     msg = this.messages.Pop();
-                    //
-                    this.accessClients.WaitOne();
-                    foreach (ClientReseau clt in this.clients)
+
+                    // Si c'est un fichier
+                    if (msg.Data.StartsWith("FILE|"))
                     {
-                        if (clt.Id != msg.Id)
+                        string[] parts = msg.Data.Split('|');
+                        if (parts.Length >= 3)
                         {
-                            // On l'envoie à tous les autres
-                            clt.Ecrire(msg.Data);
+                            string fileType = parts[1];
+                            string base64File = parts[2];
+
+                            byte[] fileData = Convert.FromBase64String(base64File);
+
+                            // Gérer le fichier (ici on peut l'enregistrer ou l'envoyer à d'autres clients)
+                            // Exemple : Sauvegarder le fichier sur le serveur
+                            string fileName = "received_file." + fileType;
+                            File.WriteAllBytes(fileName, fileData);
+
+                            // Vous pouvez aussi envoyer ce fichier à d'autres clients si nécessaire
+                            this.accessClients.WaitOne();
+                            foreach (ClientReseau clt in this.clients)
+                            {
+                                if (clt.Id != msg.Id) // Ne pas renvoyer au client qui a envoyé le fichier
+                                {
+                                    // Envoi du message avec fichier
+                                    clt.Ecrire($"FILE|{fileType}|{base64File}");
+                                }
+                            }
+                            this.accessClients.ReleaseMutex();
                         }
                     }
-                    this.accessClients.ReleaseMutex();
+                    else
+                    {
+                        // Si ce n'est pas un fichier, envoyer le message comme d'habitude
+                        this.accessClients.WaitOne();
+                        foreach (ClientReseau clt in this.clients)
+                        {
+                            if (clt.Id != msg.Id)
+                            {
+                                clt.Ecrire(msg.Data);
+                            }
+                        }
+                        this.accessClients.ReleaseMutex();
+                    }
                 }
-                // On libère
                 this.accessMessages.ReleaseMutex();
             }
-            //
         }
 
         private void Ecoute()

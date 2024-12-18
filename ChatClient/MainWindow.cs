@@ -215,13 +215,12 @@ namespace ChatClient
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Images (*.jpg; *.jpeg; *.png; *.gif)|*.jpg;*.jpeg;*.png;*.gif|MP3 Files (*.mp3)|*.mp3|All Files (*.*)|*.*";
             openFileDialog.Title = "Sélectionner un fichier";
-            if(openFileDialog.ShowDialog() == DialogResult.OK)
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                String filePath=openFileDialog.FileName;
+                String filePath = openFileDialog.FileName;
                 byte[] fileData = File.ReadAllBytes(filePath);
                 string fileType = GetFileType(filePath);
-                SendFileToServer(fileData, fileType);
-
+                DisplayImage(fileData);
 
             }
 
@@ -237,6 +236,7 @@ namespace ChatClient
                 return "mp3";
             else
                 return "unknown";
+
         }
         // Methode envoie le fichier sous forme de message encodé en Base64 au serveur
         private void SendFileToServer(byte[] fileData, string fileType)
@@ -246,10 +246,10 @@ namespace ChatClient
                 string base64File = Convert.ToBase64String(fileData);
                 string fileMessage = $"FILE|{fileType}|{base64File}";
 
-                
+
                 this.comm.Ecrire(fileMessage);
 
-                
+
                 OutilsChat.Message msg = new OutilsChat.Message(0, "Fichier envoyé : " + fileType);
                 this.AjoutMessage(msg, couleurChoisie);
             }
@@ -258,7 +258,80 @@ namespace ChatClient
                 AfficherErreur("Vous n'êtes pas connecté au serveur !");
             }
         }
+        private void SendImageToServer(byte[] imageData)
+        {
+            if (comm != null)
+            {
+                string base64Image = Convert.ToBase64String(imageData);
+                string fileMessage = $"FILE|image|{base64Image}";
 
+                this.comm.Ecrire(fileMessage);
+
+                OutilsChat.Message msg = new OutilsChat.Message(0, "Image envoyée");
+                this.AjoutMessage(msg, couleurChoisie);
+            }
+            else
+            {
+                AfficherErreur("Vous n'êtes pas connecté au serveur !");
+            }
+        }
+
+
+        private void DisplayImage(byte[] imageData)
+        {
+            using (MemoryStream ms = new MemoryStream(imageData))
+            {
+                Image img = Image.FromStream(ms);
+                pictureBox1.Image = img;
+                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            }
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+
+        }
+
+        private void groupBox2_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button3_Envoyer_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Images (*.jpg; *.jpeg; *.png; *.gif)|*.jpg;*.jpeg;*.png;*.gif|MP3 Files (*.mp3)|*.mp3|All Files (*.*)|*.*";
+            openFileDialog.Title = "Sélectionner un fichier";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+
+                string filePath = openFileDialog.FileName;
+                byte[] fileData = File.ReadAllBytes(filePath);
+                string fileType = GetFileType(filePath);
+                string fileInfoMessage = $"Fichier sélectionné : {Path.GetFileName(filePath)} ({fileType})";
+                OutilsChat.Message newMessage = new OutilsChat.Message(0, fileInfoMessage);
+                this.AjoutMessage(newMessage, couleurChoisie);
+                SendFileToServer(fileData, fileType);
+
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (pictureBox1.Image != null)
+            {
+
+            }
+
+            
+        }
+
+        private void richMessages_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 

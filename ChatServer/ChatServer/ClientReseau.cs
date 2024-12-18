@@ -118,5 +118,29 @@ namespace ChatServer
         }
 
 
+        private void SendFileToServer(String filePath)
+        {
+            string fileType=GetFileType(filePath);
+            byte[] fileData = File.ReadAllBytes(filePath);
+            string base64File=Convert.ToBase64String(fileData);
+            string fileMessage = $"FILE|{fileType}|{base64File}";
+            this.Ecrire(fileMessage);
+            OutilsChat.Message msg = new OutilsChat.Message(0, $"Fichier envoyé : {fileType}");
+            
+
+        }
+        private string GetFileType(string filePath)
+        {
+            string extension = Path.GetExtension(filePath).ToLower();
+
+            if (extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".gif")
+                return "image";
+            else if (extension == ".mp3")
+                return "mp3";
+            else
+                return "unknown";
+        }
+
+
     }
 }
