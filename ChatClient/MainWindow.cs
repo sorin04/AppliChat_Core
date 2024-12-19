@@ -103,7 +103,14 @@ namespace ChatClient
                 {
                     string base64Data = message.Texte.Split('|')[2];
                     byte[] imageData = Convert.FromBase64String(base64Data);
-                    
+                    using (MemoryStream ms = new MemoryStream(imageData))
+                    {
+                        Image image = Image.FromStream(ms);
+                        pictureBox1.Image = image;
+                        pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                    }
+
+
 
                 }
                 catch (Exception ex)
@@ -357,7 +364,7 @@ namespace ChatClient
 
         private void button3_EnvoyerImg_Click(object sender, EventArgs e)
         {
-            if (pictureBox1.Image!=null)
+            if (pictureBox1.Image != null)
             {
                 try
                 {
@@ -367,13 +374,13 @@ namespace ChatClient
                         byte[] imageData = ms.ToArray();
                         string messageReponse = EnvoyerFichierAuServeur(imageData, "image");
                         MessageBox.Show($"Réponse du serveur : {messageReponse}", "Confirmation", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        EnvoyerFichierAuServeur(imageData, "image");
+                        pictureBox1.Image = null;
 
 
                     }
 
                 }
-                catch(Exception ex) 
+                catch (Exception ex)
                 {
                     MessageBox.Show($"Erreur lors de l'envoi de l'image : {ex.Message}", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
@@ -381,26 +388,34 @@ namespace ChatClient
                 }
             }
             else
-                {
-                    MessageBox.Show("Veuillez charger une image avant d'envoyer.", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-            }
-
-        /*private void DessinerImageDansRichTextBox(Image image)
-        {
-            
-            using (Graphics g = afficher_dans_richMessages.CreateGraphics())
             {
-                
-                Point location = new Point(0, afficher_dans_richMessages.TextLength);
-
-                
-                g.DrawImage(image, location);
+                MessageBox.Show("Veuillez charger une image avant d'envoyer.", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-        }*/
+        }
 
+        private void DessinerImageDansRichTextBox(Image image)
+        {
+            Clipboard.SetImage(image);
+            if (Clipboard.ContainsImage())
+            {
+                afficher_dans_richMessages.Paste();
+            }
+            else
+            {
+                AfficherErreur("Impossible d'insérer l'image dans la boîte de messages.");
+            }
+
+
+
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
-    }
+}
 
 
 

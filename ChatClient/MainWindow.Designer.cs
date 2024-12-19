@@ -60,7 +60,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(704, 757);
+            label3.Location = new Point(703, 778);
             label3.Margin = new Padding(6, 0, 6, 0);
             label3.Name = "label3";
             label3.Size = new Size(82, 25);
@@ -197,7 +197,7 @@
             // textMessage
             // 
             textMessage.Enabled = false;
-            textMessage.Location = new Point(20, 757);
+            textMessage.Location = new Point(15, 793);
             textMessage.Margin = new Padding(6, 7, 6, 7);
             textMessage.Multiline = true;
             textMessage.Name = "textMessage";
@@ -208,7 +208,7 @@
             // buttonEnvoi
             // 
             buttonEnvoi.Enabled = false;
-            buttonEnvoi.Location = new Point(694, 787);
+            buttonEnvoi.Location = new Point(692, 803);
             buttonEnvoi.Margin = new Padding(6, 7, 6, 7);
             buttonEnvoi.Name = "buttonEnvoi";
             buttonEnvoi.Size = new Size(94, 143);
@@ -236,10 +236,10 @@
             // button2
             // 
             button2.BackgroundImage = (Image)resources.GetObject("button2.BackgroundImage");
-            button2.Location = new Point(704, 679);
+            button2.Location = new Point(674, 670);
             button2.Margin = new Padding(4, 5, 4, 5);
             button2.Name = "button2";
-            button2.Size = new Size(89, 79);
+            button2.Size = new Size(112, 103);
             button2.TabIndex = 6;
             button2.Text = "Pièces_J";
             button2.UseVisualStyleBackColor = true;
@@ -252,6 +252,7 @@
             pictureBox1.Size = new Size(385, 250);
             pictureBox1.TabIndex = 7;
             pictureBox1.TabStop = false;
+            pictureBox1.Click += pictureBox1_Click;
             // 
             // groupBox2
             // 
@@ -279,7 +280,7 @@
             button3_EnvoyerImg.Name = "button3_EnvoyerImg";
             button3_EnvoyerImg.Size = new Size(112, 34);
             button3_EnvoyerImg.TabIndex = 11;
-            button3_EnvoyerImg.Text = "button3";
+            button3_EnvoyerImg.Text = "Envoyer";
             button3_EnvoyerImg.UseVisualStyleBackColor = true;
             button3_EnvoyerImg.Click += button3_EnvoyerImg_Click;
             // 
