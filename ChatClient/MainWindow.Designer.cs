@@ -40,7 +40,7 @@
             numericPort = new NumericUpDown();
             label1 = new Label();
             buttonStart = new Button();
-            richMessages = new RichTextBox();
+            afficher_dans_richMessages = new RichTextBox();
             textMessage = new TextBox();
             buttonEnvoi = new Button();
             statusBar = new StatusStrip();
@@ -48,8 +48,8 @@
             button2 = new Button();
             pictureBox1 = new PictureBox();
             groupBox2 = new GroupBox();
-            button3_Envoyer = new Button();
             button3_Clear = new Button();
+            button3_EnvoyerImg = new Button();
             label3 = new Label();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericPort).BeginInit();
@@ -182,16 +182,17 @@
             buttonStart.UseVisualStyleBackColor = true;
             buttonStart.Click += buttonStart_Click;
             // 
-            // richMessages
+            // afficher_dans_richMessages
             // 
-            richMessages.BackColor = SystemColors.ActiveCaption;
-            richMessages.Location = new Point(20, 190);
-            richMessages.Margin = new Padding(6, 7, 6, 7);
-            richMessages.Name = "richMessages";
-            richMessages.ReadOnly = true;
-            richMessages.Size = new Size(765, 487);
-            richMessages.TabIndex = 1;
-            richMessages.Text = "";
+            afficher_dans_richMessages.BackColor = SystemColors.ActiveCaption;
+            afficher_dans_richMessages.Location = new Point(20, 190);
+            afficher_dans_richMessages.Margin = new Padding(6, 7, 6, 7);
+            afficher_dans_richMessages.Name = "afficher_dans_richMessages";
+            afficher_dans_richMessages.ReadOnly = true;
+            afficher_dans_richMessages.Size = new Size(765, 487);
+            afficher_dans_richMessages.TabIndex = 1;
+            afficher_dans_richMessages.Text = "";
+            afficher_dans_richMessages.TextChanged += richMessages_TextChanged;
             // 
             // textMessage
             // 
@@ -262,16 +263,6 @@
             groupBox2.Text = "Fichier_MP3_recu";
             groupBox2.Enter += groupBox2_Enter;
             // 
-            // button3_Envoyer
-            // 
-            button3_Envoyer.Location = new Point(848, 293);
-            button3_Envoyer.Name = "button3_Envoyer";
-            button3_Envoyer.Size = new Size(112, 34);
-            button3_Envoyer.TabIndex = 9;
-            button3_Envoyer.Text = "Envoyer";
-            button3_Envoyer.UseVisualStyleBackColor = true;
-            button3_Envoyer.Click += buttonEnvoi_Click;
-            // 
             // button3_Clear
             // 
             button3_Clear.Location = new Point(1012, 293);
@@ -282,13 +273,23 @@
             button3_Clear.UseVisualStyleBackColor = true;
             button3_Clear.Click += button3_Clear_Click;
             // 
+            // button3_EnvoyerImg
+            // 
+            button3_EnvoyerImg.Location = new Point(858, 293);
+            button3_EnvoyerImg.Name = "button3_EnvoyerImg";
+            button3_EnvoyerImg.Size = new Size(112, 34);
+            button3_EnvoyerImg.TabIndex = 11;
+            button3_EnvoyerImg.Text = "button3";
+            button3_EnvoyerImg.UseVisualStyleBackColor = true;
+            button3_EnvoyerImg.Click += button3_EnvoyerImg_Click;
+            // 
             // MainWindow
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1245, 993);
+            Controls.Add(button3_EnvoyerImg);
             Controls.Add(button3_Clear);
-            Controls.Add(button3_Envoyer);
             Controls.Add(groupBox2);
             Controls.Add(pictureBox1);
             Controls.Add(button2);
@@ -296,7 +297,7 @@
             Controls.Add(buttonEnvoi);
             Controls.Add(label3);
             Controls.Add(textMessage);
-            Controls.Add(richMessages);
+            Controls.Add(afficher_dans_richMessages);
             Controls.Add(groupBox1);
             Margin = new Padding(6, 7, 6, 7);
             MaximizeBox = false;
@@ -321,7 +322,7 @@
         private System.Windows.Forms.Button buttonStart;
         private System.Windows.Forms.Label label2;
         private OutilsChat.IPAddressControl ipAddressControl1;
-        private System.Windows.Forms.RichTextBox richMessages;
+        private System.Windows.Forms.RichTextBox afficher_dans_richMessages;
         private System.Windows.Forms.TextBox textMessage;
         private System.Windows.Forms.Button buttonEnvoi;
         private System.Windows.Forms.StatusStrip statusBar;
@@ -333,8 +334,8 @@
         private Button button2;
         private PictureBox pictureBox1;
         private GroupBox groupBox2;
-        private Button button3_Envoyer;
         private Button button3_Clear;
+        private Button button3_EnvoyerImg;
     }
 }
 

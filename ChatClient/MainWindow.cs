@@ -18,6 +18,7 @@ namespace ChatClient
         private IniFile configFile;
         private Dictionary<int, Color> clients;
         private Color couleurChoisie = Color.Black;
+        private byte[] imageData;
 
         public MainWindow()
         {
@@ -92,38 +93,45 @@ namespace ChatClient
 
         private void DoMessageReceived(GestionChat sender, OutilsChat.Message message)
         {
-            if (message.Texte.StartsWith("FILE|"))
+            if (!this.clients.ContainsKey(message.Id))
             {
-                string[] parts = message.Texte.Split('|');
-                string fileType = parts[1];
-                string base64Image = parts[2];
-
-                if (fileType == "image")
+                this.clients[message.Id] = RandomColor();
+            }
+            if (message.Texte.StartsWith("FILE|image|"))
+            {
+                try
                 {
-                    byte[] imageData = Convert.FromBase64String(base64Image);
-                    AjouterImageRichTextBox(imageData);
+                    string base64Data = message.Texte.Split('|')[2];
+                    byte[] imageData = Convert.FromBase64String(base64Data);
+                    
+
+                }
+                catch (Exception ex)
+                {
+                    AfficherErreur($"Erreur lors de la réception de l'image : {ex.Message}");
                 }
             }
             else
             {
-                this.AjoutMessage(message, this.clients[message.Id]);
+                AjoutMessage(message, this.clients[message.Id]);
+
             }
         }
 
         private void AjoutMessage(OutilsChat.Message msg, Color clr)
         {
-            int beforeAppend = this.richMessages.TextLength;
-            this.richMessages.AppendText(msg.Param1 + " - " + DateTime.Now.ToString() + Environment.NewLine);
-            int afterAppend = this.richMessages.TextLength;
-            this.richMessages.Select(beforeAppend, afterAppend - beforeAppend);
-            this.richMessages.SelectionColor = clr;
-            this.richMessages.SelectionFont = new Font(this.richMessages.SelectionFont, FontStyle.Bold);
+            int beforeAppend = this.afficher_dans_richMessages.TextLength;
+            this.afficher_dans_richMessages.AppendText(msg.Param1 + " - " + DateTime.Now.ToString() + Environment.NewLine);
+            int afterAppend = this.afficher_dans_richMessages.TextLength;
+            this.afficher_dans_richMessages.Select(beforeAppend, afterAppend - beforeAppend);
+            this.afficher_dans_richMessages.SelectionColor = clr;
+            this.afficher_dans_richMessages.SelectionFont = new Font(this.afficher_dans_richMessages.SelectionFont, FontStyle.Bold);
 
-            beforeAppend = this.richMessages.TextLength;
-            this.richMessages.AppendText(msg.Texte + Environment.NewLine);
-            afterAppend = this.richMessages.TextLength;
-            this.richMessages.Select(beforeAppend, afterAppend - beforeAppend);
-            this.richMessages.SelectionColor = clr;
+            beforeAppend = this.afficher_dans_richMessages.TextLength;
+            this.afficher_dans_richMessages.AppendText(msg.Texte + Environment.NewLine);
+            afterAppend = this.afficher_dans_richMessages.TextLength;
+            this.afficher_dans_richMessages.Select(beforeAppend, afterAppend - beforeAppend);
+            this.afficher_dans_richMessages.SelectionColor = clr;
         }
 
         private Color RandomColor()
@@ -165,20 +173,27 @@ namespace ChatClient
 
         private void buttonEnvoi_Click(object sender, EventArgs e)
         {
-            if (comm != null)
-            {
-                string messageText = this.textMessage.Text;
-                if (string.IsNullOrWhiteSpace(messageText)) return;
+            string messageText = this.textMessage.Text;
+            if (string.IsNullOrWhiteSpace(messageText)) return;
+            string colorRGB = $"{couleurChoisie.R},{couleurChoisie.G},{couleurChoisie.B}";
+            string fullMessage = messageText;
+            this.comm.Ecrire(fullMessage);
+            OutilsChat.Message newMessage = new OutilsChat.Message(0, messageText);
+            this.AjoutMessage(newMessage, couleurChoisie);
+            this.textMessage.Clear();
 
-                string colorRGB = $"{couleurChoisie.R},{couleurChoisie.G},{couleurChoisie.B}";
-                string fullMessage = $"{messageText}|{colorRGB}";
-                this.comm.Ecrire(fullMessage);
+            /*string messageText = this.textMessage.Text;
+            if (string.IsNullOrWhiteSpace(messageText)) return;
 
-                OutilsChat.Message newMessage = new OutilsChat.Message(0, this.textMessage.Text);
-                newMessage.Envoi(this.textAlias.Text);
-                this.AjoutMessage(newMessage, couleurChoisie);
-                this.textMessage.Clear();
-            }
+            string colorRGB = $"{couleurChoisie.R},{couleurChoisie.G},{couleurChoisie.B}";
+            string fullMessage = messageText;
+            this.comm.Ecrire(fullMessage);
+
+            OutilsChat.Message newMessage = new OutilsChat.Message(0, this.textMessage.Text);
+            newMessage.Envoi(this.textAlias.Text);
+            this.AjoutMessage(newMessage, couleurChoisie);
+            this.textMessage.Clear();*/
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -205,7 +220,7 @@ namespace ChatClient
                 if (fileType == "image")
                 {
                     DisplayImage(fileData);
-                    
+
                 }
                 else
                 {
@@ -226,20 +241,29 @@ namespace ChatClient
                 return "inconnu";
         }
 
-        private void EnvoyerFichierAuServeur(byte[] fileData, string fileType)
+        private string EnvoyerFichierAuServeur(byte[] fileData, string fileType)
         {
             if (comm != null)
             {
-                string base64File = Convert.ToBase64String(fileData);
-                string fileMessage = $"FILE|{fileType}|{base64File}";
-                this.comm.Ecrire(fileMessage);
+                try
+                {
+                    string base64File = Convert.ToBase64String(fileData);
+                    string fileMessage = $"FILE|{fileType}|{base64File}";
+                    this.comm.Ecrire(fileMessage);
 
-                OutilsChat.Message msg = new OutilsChat.Message(0, "Fichier envoyé : " + fileType);
-                this.AjoutMessage(msg, couleurChoisie);
+                    OutilsChat.Message msg = new OutilsChat.Message(0, "Fichier envoyé : " + fileType);
+                    this.AjoutMessage(msg, couleurChoisie);
+
+                    return "Fichier envoyé avec succès.";
+                }
+                catch (Exception ex)
+                {
+                    return $"Erreur lors de l'envoi du fichier : {ex.Message}";
+                }
             }
             else
             {
-                AfficherErreur("Vous n'êtes pas connecté au serveur !");
+                return "Vous n'êtes pas connecté au serveur !";
             }
         }
 
@@ -287,30 +311,43 @@ namespace ChatClient
             }
         }
 
-        private void AjouterImageRichTextBox(byte[] imageData)
+
+
+        private void groupBox2_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void richMessages_TextChanged(object sender, EventArgs e)
         {
             if (imageData == null || imageData.Length == 0)
             {
                 AfficherErreur("Les données de l'image sont invalides !");
                 return;
             }
-
             try
             {
                 using (MemoryStream ms = new MemoryStream(imageData))
                 {
                     Image image = Image.FromStream(ms);
-                    Clipboard.SetImage(image);
-
+                    int width = 100;
+                    int height = 100;
+                    Image resizedImage = new Bitmap(image, new Size(width, height));
+                    Clipboard.SetImage(resizedImage);
                     if (Clipboard.ContainsImage())
                     {
-                        richMessages.Paste();
+                        afficher_dans_richMessages.Paste();
                     }
                     else
                     {
                         AfficherErreur("Impossible d'insérer l'image dans la boîte de messages.");
                     }
+
                 }
+
+
+
+
             }
             catch (Exception ex)
             {
@@ -318,9 +355,52 @@ namespace ChatClient
             }
         }
 
-        private void groupBox2_Enter(object sender, EventArgs e)
+        private void button3_EnvoyerImg_Click(object sender, EventArgs e)
         {
+            if (pictureBox1.Image!=null)
+            {
+                try
+                {
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        pictureBox1.Image.Save(ms, pictureBox1.Image.RawFormat);
+                        byte[] imageData = ms.ToArray();
+                        string messageReponse = EnvoyerFichierAuServeur(imageData, "image");
+                        MessageBox.Show($"Réponse du serveur : {messageReponse}", "Confirmation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        EnvoyerFichierAuServeur(imageData, "image");
 
-        }
+
+                    }
+
+                }
+                catch(Exception ex) 
+                {
+                    MessageBox.Show($"Erreur lors de l'envoi de l'image : {ex.Message}", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+
+                }
+            }
+            else
+                {
+                    MessageBox.Show("Veuillez charger une image avant d'envoyer.", "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+
+        /*private void DessinerImageDansRichTextBox(Image image)
+        {
+            
+            using (Graphics g = afficher_dans_richMessages.CreateGraphics())
+            {
+                
+                Point location = new Point(0, afficher_dans_richMessages.TextLength);
+
+                
+                g.DrawImage(image, location);
+            }
+        }*/
+
     }
-}
+    }
+
+
+
