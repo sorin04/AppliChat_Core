@@ -52,21 +52,25 @@
             button3_EnvoyerImg = new Button();
             imageRecuLabel = new Label();
             imageRecuPB = new PictureBox();
+            button_Play = new Button();
+            button_Stop = new Button();
+            button_EnvoyerMP3 = new Button();
             label3 = new Label();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericPort).BeginInit();
             statusBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)imageEnvoiPB).BeginInit();
+            groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)imageRecuPB).BeginInit();
             SuspendLayout();
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(562, 622);
-            label3.Margin = new Padding(5, 0, 5, 0);
+            label3.Location = new Point(492, 466);
+            label3.Margin = new Padding(4, 0, 4, 0);
             label3.Name = "label3";
-            label3.Size = new Size(67, 20);
+            label3.Size = new Size(53, 15);
             label3.TabIndex = 4;
             label3.Text = "Message";
             // 
@@ -81,21 +85,20 @@
             groupBox1.Controls.Add(numericPort);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(buttonStart);
-            groupBox1.Location = new Point(16, 18);
-            groupBox1.Margin = new Padding(5, 6, 5, 6);
+            groupBox1.Location = new Point(14, 14);
+            groupBox1.Margin = new Padding(4, 4, 4, 4);
             groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new Padding(5, 6, 5, 6);
-            groupBox1.Size = new Size(613, 126);
+            groupBox1.Padding = new Padding(4, 4, 4, 4);
+            groupBox1.Size = new Size(536, 94);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Configuration";
             // 
             // button1
             // 
-            button1.Location = new Point(8, 86);
-            button1.Margin = new Padding(3, 4, 3, 4);
+            button1.Location = new Point(7, 64);
             button1.Name = "button1";
-            button1.Size = new Size(86, 30);
+            button1.Size = new Size(75, 22);
             button1.TabIndex = 6;
             button1.Text = "Couleurs";
             button1.UseVisualStyleBackColor = true;
@@ -104,27 +107,27 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(249, 78);
-            label4.Margin = new Padding(5, 0, 5, 0);
+            label4.Location = new Point(218, 58);
+            label4.Margin = new Padding(4, 0, 4, 0);
             label4.Name = "label4";
-            label4.Size = new Size(48, 20);
+            label4.Size = new Size(38, 15);
             label4.TabIndex = 5;
             label4.Text = "Alias :";
             // 
             // textAlias
             // 
-            textAlias.Location = new Point(328, 74);
-            textAlias.Margin = new Padding(5, 6, 5, 6);
+            textAlias.Location = new Point(287, 56);
+            textAlias.Margin = new Padding(4, 4, 4, 4);
             textAlias.Name = "textAlias";
-            textAlias.Size = new Size(132, 27);
+            textAlias.Size = new Size(116, 23);
             textAlias.TabIndex = 4;
             // 
             // buttonStop
             // 
-            buttonStop.Location = new Point(473, 32);
-            buttonStop.Margin = new Padding(5, 6, 5, 6);
+            buttonStop.Location = new Point(414, 24);
+            buttonStop.Margin = new Padding(4, 4, 4, 4);
             buttonStop.Name = "buttonStop";
-            buttonStop.Size = new Size(101, 34);
+            buttonStop.Size = new Size(88, 26);
             buttonStop.TabIndex = 3;
             buttonStop.Text = "Stop";
             buttonStop.UseVisualStyleBackColor = true;
@@ -136,30 +139,30 @@
             ipAddressControl1.BackColor = SystemColors.Control;
             ipAddressControl1.IPAddress = "0.0.0.0";
             ipAddressControl1.IsSubnetMask = false;
-            ipAddressControl1.Location = new Point(75, 32);
-            ipAddressControl1.Margin = new Padding(5, 6, 5, 6);
+            ipAddressControl1.Location = new Point(66, 24);
+            ipAddressControl1.Margin = new Padding(4, 4, 4, 4);
             ipAddressControl1.Name = "ipAddressControl1";
-            ipAddressControl1.Size = new Size(203, 30);
+            ipAddressControl1.Size = new Size(178, 22);
             ipAddressControl1.TabIndex = 0;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(8, 38);
-            label2.Margin = new Padding(5, 0, 5, 0);
+            label2.Location = new Point(7, 28);
+            label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
-            label2.Size = new Size(58, 20);
+            label2.Size = new Size(46, 15);
             label2.TabIndex = 2;
             label2.Text = "Serveur";
             // 
             // numericPort
             // 
-            numericPort.Location = new Point(357, 34);
-            numericPort.Margin = new Padding(5, 6, 5, 6);
+            numericPort.Location = new Point(312, 26);
+            numericPort.Margin = new Padding(4, 4, 4, 4);
             numericPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
             numericPort.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericPort.Name = "numericPort";
-            numericPort.Size = new Size(104, 27);
+            numericPort.Size = new Size(91, 23);
             numericPort.TabIndex = 1;
             numericPort.TextAlign = HorizontalAlignment.Right;
             numericPort.Value = new decimal(new int[] { 1, 0, 0, 0 });
@@ -167,19 +170,19 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(303, 38);
-            label1.Margin = new Padding(5, 0, 5, 0);
+            label1.Location = new Point(265, 28);
+            label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
-            label1.Size = new Size(46, 20);
+            label1.Size = new Size(38, 15);
             label1.TabIndex = 1;
             label1.Text = "Port : ";
             // 
             // buttonStart
             // 
-            buttonStart.Location = new Point(473, 32);
-            buttonStart.Margin = new Padding(5, 6, 5, 6);
+            buttonStart.Location = new Point(414, 24);
+            buttonStart.Margin = new Padding(4, 4, 4, 4);
             buttonStart.Name = "buttonStart";
-            buttonStart.Size = new Size(101, 34);
+            buttonStart.Size = new Size(88, 26);
             buttonStart.TabIndex = 2;
             buttonStart.Text = "Start";
             buttonStart.UseVisualStyleBackColor = true;
@@ -188,33 +191,32 @@
             // afficher_dans_richMessages
             // 
             afficher_dans_richMessages.BackColor = SystemColors.ActiveCaption;
-            afficher_dans_richMessages.Location = new Point(16, 152);
-            afficher_dans_richMessages.Margin = new Padding(5, 6, 5, 6);
+            afficher_dans_richMessages.Location = new Point(14, 114);
+            afficher_dans_richMessages.Margin = new Padding(4, 4, 4, 4);
             afficher_dans_richMessages.Name = "afficher_dans_richMessages";
             afficher_dans_richMessages.ReadOnly = true;
-            afficher_dans_richMessages.Size = new Size(613, 390);
+            afficher_dans_richMessages.Size = new Size(537, 294);
             afficher_dans_richMessages.TabIndex = 1;
             afficher_dans_richMessages.Text = "";
-            
             // 
             // textMessage
             // 
             textMessage.Enabled = false;
-            textMessage.Location = new Point(0, 536);
-            textMessage.Margin = new Padding(5, 6, 5, 6);
+            textMessage.Location = new Point(0, 482);
+            textMessage.Margin = new Padding(4, 4, 4, 4);
             textMessage.Multiline = true;
             textMessage.Name = "textMessage";
             textMessage.ScrollBars = ScrollBars.Both;
-            textMessage.Size = new Size(529, 138);
+            textMessage.Size = new Size(463, 104);
             textMessage.TabIndex = 2;
             // 
             // buttonEnvoi
             // 
             buttonEnvoi.Enabled = false;
-            buttonEnvoi.Location = new Point(554, 642);
-            buttonEnvoi.Margin = new Padding(5, 6, 5, 6);
+            buttonEnvoi.Location = new Point(479, 500);
+            buttonEnvoi.Margin = new Padding(4, 4, 4, 4);
             buttonEnvoi.Name = "buttonEnvoi";
-            buttonEnvoi.Size = new Size(75, 114);
+            buttonEnvoi.Size = new Size(66, 86);
             buttonEnvoi.TabIndex = 3;
             buttonEnvoi.Text = "Envoyer";
             buttonEnvoi.UseVisualStyleBackColor = true;
@@ -224,25 +226,24 @@
             // 
             statusBar.ImageScalingSize = new Size(20, 20);
             statusBar.Items.AddRange(new ToolStripItem[] { statusBarInfo });
-            statusBar.Location = new Point(0, 842);
+            statusBar.Location = new Point(0, 626);
             statusBar.Name = "statusBar";
-            statusBar.Padding = new Padding(1, 0, 19, 0);
-            statusBar.Size = new Size(996, 22);
+            statusBar.Padding = new Padding(1, 0, 17, 0);
+            statusBar.Size = new Size(872, 22);
             statusBar.TabIndex = 5;
             statusBar.Text = "statusStrip1";
             // 
             // statusBarInfo
             // 
             statusBarInfo.Name = "statusBarInfo";
-            statusBarInfo.Size = new Size(0, 16);
+            statusBarInfo.Size = new Size(0, 17);
             // 
             // button2
             // 
             button2.BackgroundImage = (Image)resources.GetObject("button2.BackgroundImage");
-            button2.Location = new Point(539, 536);
-            button2.Margin = new Padding(3, 4, 3, 4);
+            button2.Location = new Point(471, 415);
             button2.Name = "button2";
-            button2.Size = new Size(90, 82);
+            button2.Size = new Size(79, 62);
             button2.TabIndex = 6;
             button2.Text = "Pièces_J";
             button2.UseVisualStyleBackColor = true;
@@ -250,31 +251,34 @@
             // 
             // imageEnvoiPB
             // 
-            imageEnvoiPB.Location = new Point(678, 30);
+            imageEnvoiPB.Location = new Point(593, 22);
             imageEnvoiPB.Margin = new Padding(2);
             imageEnvoiPB.Name = "imageEnvoiPB";
-            imageEnvoiPB.Size = new Size(308, 200);
+            imageEnvoiPB.Size = new Size(270, 150);
             imageEnvoiPB.TabIndex = 7;
             imageEnvoiPB.TabStop = false;
             // 
             // groupBox2
             // 
-            groupBox2.Location = new Point(678, 607);
+            groupBox2.Controls.Add(button_EnvoyerMP3);
+            groupBox2.Controls.Add(button_Stop);
+            groupBox2.Controls.Add(button_Play);
+            groupBox2.Location = new Point(593, 455);
             groupBox2.Margin = new Padding(2);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(2);
-            groupBox2.Size = new Size(298, 214);
+            groupBox2.Size = new Size(261, 160);
             groupBox2.TabIndex = 8;
             groupBox2.TabStop = false;
             groupBox2.Text = "Fichier_MP3_recu";
-            
+            groupBox2.Enter += groupBox2_Enter;
             // 
             // button3_Clear
             // 
-            button3_Clear.Location = new Point(810, 234);
+            button3_Clear.Location = new Point(709, 176);
             button3_Clear.Margin = new Padding(2);
             button3_Clear.Name = "button3_Clear";
-            button3_Clear.Size = new Size(90, 27);
+            button3_Clear.Size = new Size(79, 20);
             button3_Clear.TabIndex = 10;
             button3_Clear.Text = "Clear";
             button3_Clear.UseVisualStyleBackColor = true;
@@ -282,10 +286,10 @@
             // 
             // button3_EnvoyerImg
             // 
-            button3_EnvoyerImg.Location = new Point(686, 234);
+            button3_EnvoyerImg.Location = new Point(600, 176);
             button3_EnvoyerImg.Margin = new Padding(2);
             button3_EnvoyerImg.Name = "button3_EnvoyerImg";
-            button3_EnvoyerImg.Size = new Size(90, 27);
+            button3_EnvoyerImg.Size = new Size(79, 20);
             button3_EnvoyerImg.TabIndex = 11;
             button3_EnvoyerImg.Text = "Envoyer";
             button3_EnvoyerImg.UseVisualStyleBackColor = true;
@@ -294,26 +298,53 @@
             // imageRecuLabel
             // 
             imageRecuLabel.AutoSize = true;
-            imageRecuLabel.Location = new Point(678, 301);
+            imageRecuLabel.Location = new Point(593, 226);
             imageRecuLabel.Name = "imageRecuLabel";
-            imageRecuLabel.Size = new Size(111, 20);
+            imageRecuLabel.Size = new Size(87, 15);
             imageRecuLabel.TabIndex = 12;
             imageRecuLabel.Text = "Image received";
             // 
             // imageRecuPB
             // 
-            imageRecuPB.Location = new Point(678, 333);
+            imageRecuPB.Location = new Point(593, 250);
             imageRecuPB.Margin = new Padding(2);
             imageRecuPB.Name = "imageRecuPB";
-            imageRecuPB.Size = new Size(308, 200);
+            imageRecuPB.Size = new Size(270, 150);
             imageRecuPB.TabIndex = 13;
             imageRecuPB.TabStop = false;
             // 
+            // button_Play
+            // 
+            button_Play.Location = new Point(12, 103);
+            button_Play.Name = "button_Play";
+            button_Play.Size = new Size(75, 23);
+            button_Play.TabIndex = 0;
+            button_Play.Text = "Play";
+            button_Play.UseVisualStyleBackColor = true;
+            // 
+            // button_Stop
+            // 
+            button_Stop.Location = new Point(93, 103);
+            button_Stop.Name = "button_Stop";
+            button_Stop.Size = new Size(75, 23);
+            button_Stop.TabIndex = 1;
+            button_Stop.Text = "Stop";
+            button_Stop.UseVisualStyleBackColor = true;
+            // 
+            // button_EnvoyerMP3
+            // 
+            button_EnvoyerMP3.Location = new Point(12, 132);
+            button_EnvoyerMP3.Name = "button_EnvoyerMP3";
+            button_EnvoyerMP3.Size = new Size(75, 23);
+            button_EnvoyerMP3.TabIndex = 2;
+            button_EnvoyerMP3.Text = "EnvoyerMP3      ";
+            button_EnvoyerMP3.UseVisualStyleBackColor = true;
+            // 
             // MainWindow
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(996, 864);
+            ClientSize = new Size(872, 648);
             Controls.Add(imageRecuPB);
             Controls.Add(imageRecuLabel);
             Controls.Add(button3_EnvoyerImg);
@@ -327,7 +358,7 @@
             Controls.Add(textMessage);
             Controls.Add(afficher_dans_richMessages);
             Controls.Add(groupBox1);
-            Margin = new Padding(5, 6, 5, 6);
+            Margin = new Padding(4, 4, 4, 4);
             MaximizeBox = false;
             Name = "MainWindow";
             Text = "Client de Tchatche";
@@ -338,6 +369,7 @@
             statusBar.ResumeLayout(false);
             statusBar.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)imageEnvoiPB).EndInit();
+            groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)imageRecuPB).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -367,6 +399,9 @@
         private Button button3_EnvoyerImg;
         private Label imageRecuLabel;
         private PictureBox imageRecuPB;
+        private Button button_Stop;
+        private Button button_Play;
+        private Button button_EnvoyerMP3;
     }
 }
 

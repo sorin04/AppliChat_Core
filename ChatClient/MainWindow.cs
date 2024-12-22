@@ -107,7 +107,7 @@ namespace ChatClient
             {
                 this.clients[message.Id] = RandomColor();
             }
-            
+
             if (message.imageData != null)
             {
                 try
@@ -214,13 +214,13 @@ namespace ChatClient
             {
                 string filePath = openFileDialog.FileName;
                 fileName = openFileDialog.SafeFileName;
-               
+
                 outputPathCompressed = CompressImage(filePath, 200, 200, 50);
 
                 byte[] fileData = File.ReadAllBytes(outputPathCompressed);
                 string fileType = obtenirTypeFichier(outputPathCompressed);
 
-                
+
                 if (fileType == "image")
                 {
                     DisplayImage(fileData);
@@ -276,10 +276,10 @@ namespace ChatClient
                 try
                 {
                     imageData = ConvertImageToBytes(imageEnvoiPB.Image);
-                    
+
                     this.textMessage.Text = this.textAlias.Text + " send " + "an image: " + fileName;
                     string messageText = this.textMessage.Text;
-                        
+
                     if (string.IsNullOrWhiteSpace(messageText))
                     {
 
@@ -288,7 +288,7 @@ namespace ChatClient
 
                     string colorRGB = $"{couleurChoisie.R},{couleurChoisie.G},{couleurChoisie.B}";
                     this.comm.Ecrire(messageText, imageData);
-                        
+
 
                     OutilsChat.Message newMessage = new OutilsChat.Message(0, messageText);
                     newMessage.Envoi(this.textAlias.Text);
@@ -322,7 +322,7 @@ namespace ChatClient
         {
             using (System.Drawing.Image originalImage = System.Drawing.Image.FromFile(inputPath))
             {
-                
+
                 using (Bitmap resizedImage = new Bitmap(newWidth, newHeight))
                 {
                     using (Graphics graphics = Graphics.FromImage(resizedImage))
@@ -331,16 +331,16 @@ namespace ChatClient
                         graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
                         graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 
-                        
+
                         graphics.DrawImage(originalImage, 0, 0, newWidth, newHeight);
                     }
 
-                    
+
                     ImageCodecInfo pngEncoder = GetEncoder(ImageFormat.Png);
                     EncoderParameters encoderParameters = new EncoderParameters(1);
                     encoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, quality);
                     string output = $"compressed{Guid.NewGuid()}.png";
-                    
+
                     resizedImage.Save(output, pngEncoder, encoderParameters);
 
                     return output;
@@ -359,6 +359,11 @@ namespace ChatClient
                 }
             }
             return null;
+        }
+
+        private void groupBox2_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }
