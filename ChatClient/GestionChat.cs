@@ -128,6 +128,18 @@ namespace ChatClient
             }
         }
 
+        public void Ecrire(string msg, byte[] imageData)
+        {
+            if (this.client != null)
+            {
+                OutilsChat.Message newMessage = new OutilsChat.Message(this.client.Id, msg, imageData);
+                newMessage.Envoi(alias);
+                //
+                this.client.Ecrire(newMessage.Data);
+            }
+        }
+
+
 
 
         public void Stop()

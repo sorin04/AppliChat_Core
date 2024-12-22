@@ -63,7 +63,7 @@ namespace ChatServer
             // On récupère le flux avec les infos
             this.clientStream = tcpClient.GetStream();
             //
-            byte[] message = new byte[4096];
+            byte[] message = new byte[5000000];
             int bytesRead;
             while (true)
             {
@@ -71,7 +71,7 @@ namespace ChatServer
                 try
                 {
                     //
-                    bytesRead = clientStream.Read(message, 0, 4096);
+                    bytesRead = clientStream.Read(message, 0, 5000000);
                 }
                 catch
                 {

@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ImageMagick;
+using ImageMagick.Formats;
 using OutilsChat;
+using SkiaSharp;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ChatClient
 {
@@ -19,6 +25,8 @@ namespace ChatClient
         private Dictionary<int, Color> clients;
         private Color couleurChoisie = Color.Black;
         private byte[] imageData;
+        private string fileName;
+        private string outputPathCompressed;
 
         public MainWindow()
         {
@@ -31,6 +39,8 @@ namespace ChatClient
             this.numericPort.Value = port;
             this.ipAddressControl1.IPAddress = ipAddress;
             this.textAlias.Text = alias;
+            this.imageRecuLabel.Visible = false;
+            this.imageRecuPB.Visible = false;
             this.Text += " " + Constants.APP_VERSION;
             this.clients = new Dictionary<int, Color>();
         }
@@ -97,32 +107,26 @@ namespace ChatClient
             {
                 this.clients[message.Id] = RandomColor();
             }
-            if (message.Texte.StartsWith("FILE|image|"))
+            
+            if (message.imageData != null)
             {
                 try
                 {
-                    string base64Data = message.Texte.Split('|')[2];
-                    byte[] imageData = Convert.FromBase64String(base64Data);
-                    using (MemoryStream ms = new MemoryStream(imageData))
-                    {
-                        Image image = Image.FromStream(ms);
-                        pictureBox1.Image = image;
-                        pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-                    }
+                    String imageRecuChemin = $"image{Guid.NewGuid()}.png";
+                    File.WriteAllBytes(imageRecuChemin, message.imageData);
+                    imageRecuLabel.Visible = true;
+                    imageRecuPB.Visible = true;
 
-
-
+                    imageRecuPB.Image = System.Drawing.Image.FromFile(imageRecuChemin);
+                    imageRecuPB.SizeMode = PictureBoxSizeMode.StretchImage;
                 }
                 catch (Exception ex)
                 {
-                    AfficherErreur($"Erreur lors de la réception de l'image : {ex.Message}");
+                    MessageBox.Show($"Erreur lors de la réception de l'image : {ex.Message}");
                 }
             }
-            else
-            {
-                AjoutMessage(message, this.clients[message.Id]);
 
-            }
+            this.AjoutMessage(message, couleurChoisie);
         }
 
         private void AjoutMessage(OutilsChat.Message msg, Color clr)
@@ -132,7 +136,7 @@ namespace ChatClient
             int afterAppend = this.afficher_dans_richMessages.TextLength;
             this.afficher_dans_richMessages.Select(beforeAppend, afterAppend - beforeAppend);
             this.afficher_dans_richMessages.SelectionColor = clr;
-            this.afficher_dans_richMessages.SelectionFont = new Font(this.afficher_dans_richMessages.SelectionFont, FontStyle.Bold);
+            this.afficher_dans_richMessages.SelectionFont = new System.Drawing.Font(this.afficher_dans_richMessages.SelectionFont, FontStyle.Bold);
 
             beforeAppend = this.afficher_dans_richMessages.TextLength;
             this.afficher_dans_richMessages.AppendText(msg.Texte + Environment.NewLine);
@@ -186,21 +190,9 @@ namespace ChatClient
             string fullMessage = messageText;
             this.comm.Ecrire(fullMessage);
             OutilsChat.Message newMessage = new OutilsChat.Message(0, messageText);
-            this.AjoutMessage(newMessage, couleurChoisie);
-            this.textMessage.Clear();
-
-            /*string messageText = this.textMessage.Text;
-            if (string.IsNullOrWhiteSpace(messageText)) return;
-
-            string colorRGB = $"{couleurChoisie.R},{couleurChoisie.G},{couleurChoisie.B}";
-            string fullMessage = messageText;
-            this.comm.Ecrire(fullMessage);
-
-            OutilsChat.Message newMessage = new OutilsChat.Message(0, this.textMessage.Text);
             newMessage.Envoi(this.textAlias.Text);
             this.AjoutMessage(newMessage, couleurChoisie);
-            this.textMessage.Clear();*/
-
+            this.textMessage.Clear();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -221,9 +213,14 @@ namespace ChatClient
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string filePath = openFileDialog.FileName;
-                byte[] fileData = File.ReadAllBytes(filePath);
-                string fileType = obtenirTypeFichier(filePath);
+                fileName = openFileDialog.SafeFileName;
+               
+                outputPathCompressed = CompressImage(filePath, 200, 200, 50);
 
+                byte[] fileData = File.ReadAllBytes(outputPathCompressed);
+                string fileType = obtenirTypeFichier(outputPathCompressed);
+
+                
                 if (fileType == "image")
                 {
                     DisplayImage(fileData);
@@ -231,7 +228,7 @@ namespace ChatClient
                 }
                 else
                 {
-                    AfficherErreur("Seul les fichiers image peuvent être sélectionnés.");
+                    MessageBox.Show("Seul les fichiers image peuvent être sélectionnés.", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -248,143 +245,59 @@ namespace ChatClient
                 return "inconnu";
         }
 
-        private string EnvoyerFichierAuServeur(byte[] fileData, string fileType)
-        {
-            if (comm != null)
-            {
-                try
-                {
-                    string base64File = Convert.ToBase64String(fileData);
-                    string fileMessage = $"FILE|{fileType}|{base64File}";
-                    this.comm.Ecrire(fileMessage);
-
-                    OutilsChat.Message msg = new OutilsChat.Message(0, "Fichier envoyé : " + fileType);
-                    this.AjoutMessage(msg, couleurChoisie);
-
-                    return "Fichier envoyé avec succès.";
-                }
-                catch (Exception ex)
-                {
-                    return $"Erreur lors de l'envoi du fichier : {ex.Message}";
-                }
-            }
-            else
-            {
-                return "Vous n'êtes pas connecté au serveur !";
-            }
-        }
 
         private void DisplayImage(byte[] imageData)
         {
             using (MemoryStream ms = new MemoryStream(imageData))
             {
-                Image img = Image.FromStream(ms);
-                pictureBox1.Image = img;
-                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            }
-        }
-
-        private void button3_Envoyer_Click(object sender, EventArgs e)
-        {
-            if (pictureBox1.Image != null)
-            {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    pictureBox1.Image.Save(ms, pictureBox1.Image.RawFormat);
-                    byte[] imageData = ms.ToArray();
-                    EnvoyerFichierAuServeur(imageData, "image");
-
-                    OutilsChat.Message newMessage = new OutilsChat.Message(0, "Image envoyée");
-                    this.AjoutMessage(newMessage, couleurChoisie);
-                    pictureBox1.Image = null;
-                }
-            }
-            else
-            {
-                AfficherErreur("Aucune image à envoyer.");
+                System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
+                imageEnvoiPB.Image = img;
+                imageEnvoiPB.SizeMode = PictureBoxSizeMode.StretchImage;
             }
         }
 
         private void button3_Clear_Click(object sender, EventArgs e)
         {
-            if (pictureBox1.Image != null)
+            if (imageEnvoiPB.Image != null)
             {
-                pictureBox1.Image = null;
-                AfficherInfo("L'image a été supprimée.");
+                imageEnvoiPB.Image = null;
+                MessageBox.Show("L'image a été supprimée.");
             }
             else
             {
-                AfficherErreur("Aucune image à supprimer.");
-            }
-        }
-
-
-
-        private void groupBox2_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void richMessages_TextChanged(object sender, EventArgs e)
-        {
-            if (imageData == null || imageData.Length == 0)
-            {
-                AfficherErreur("Les données de l'image sont invalides !");
-                return;
-            }
-            try
-            {
-                using (MemoryStream ms = new MemoryStream(imageData))
-                {
-                    Image image = Image.FromStream(ms);
-                    int width = 100;
-                    int height = 100;
-                    Image resizedImage = new Bitmap(image, new Size(width, height));
-                    Clipboard.SetImage(resizedImage);
-                    if (Clipboard.ContainsImage())
-                    {
-                        afficher_dans_richMessages.Paste();
-                    }
-                    else
-                    {
-                        AfficherErreur("Impossible d'insérer l'image dans la boîte de messages.");
-                    }
-
-                }
-
-
-
-
-            }
-            catch (Exception ex)
-            {
-                AfficherErreur($"Erreur lors de l'ajout de l'image : {ex.Message}");
+                MessageBox.Show("Aucune image à supprimer.");
             }
         }
 
         private void button3_EnvoyerImg_Click(object sender, EventArgs e)
         {
-            if (pictureBox1.Image != null)
+            if (imageEnvoiPB.Image != null)
             {
                 try
                 {
-                    using (MemoryStream ms = new MemoryStream())
+                    imageData = ConvertImageToBytes(imageEnvoiPB.Image);
+                    
+                    this.textMessage.Text = this.textAlias.Text + " send " + "an image: " + fileName;
+                    string messageText = this.textMessage.Text;
+                        
+                    if (string.IsNullOrWhiteSpace(messageText))
                     {
-                        pictureBox1.Image.Save(ms, pictureBox1.Image.RawFormat);
-                        byte[] imageData = ms.ToArray();
-                        string messageReponse = EnvoyerFichierAuServeur(imageData, "image");
-                        MessageBox.Show($"Réponse du serveur : {messageReponse}", "Confirmation", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        pictureBox1.Image = null;
 
-
+                        messageText = "J'envoie une image";
                     }
 
+                    string colorRGB = $"{couleurChoisie.R},{couleurChoisie.G},{couleurChoisie.B}";
+                    this.comm.Ecrire(messageText, imageData);
+                        
+
+                    OutilsChat.Message newMessage = new OutilsChat.Message(0, messageText);
+                    newMessage.Envoi(this.textAlias.Text);
+                    this.AjoutMessage(newMessage, couleurChoisie);
+                    this.textMessage.Clear();
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Erreur lors de l'envoi de l'image : {ex.Message}", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-
                 }
             }
             else
@@ -393,29 +306,59 @@ namespace ChatClient
             }
         }
 
-        private void DessinerImageDansRichTextBox(Image image)
+        public static byte[] ConvertImageToBytes(System.Drawing.Image image)
         {
-            Clipboard.SetImage(image);
-            if (Clipboard.ContainsImage())
+            if (image == null)
+                throw new ArgumentNullException(nameof(image));
+
+            using (MemoryStream memoryStream = new MemoryStream())
             {
-                afficher_dans_richMessages.Paste();
+                image.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
+                return memoryStream.ToArray();
             }
-            else
-            {
-                AfficherErreur("Impossible d'insérer l'image dans la boîte de messages.");
-            }
-
-
-
-
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
+        public string CompressImage(string inputPath, int newWidth, int newHeight, long quality)
         {
+            using (System.Drawing.Image originalImage = System.Drawing.Image.FromFile(inputPath))
+            {
+                
+                using (Bitmap resizedImage = new Bitmap(newWidth, newHeight))
+                {
+                    using (Graphics graphics = Graphics.FromImage(resizedImage))
+                    {
+                        graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                        graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                        graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 
+                        
+                        graphics.DrawImage(originalImage, 0, 0, newWidth, newHeight);
+                    }
+
+                    
+                    ImageCodecInfo pngEncoder = GetEncoder(ImageFormat.Png);
+                    EncoderParameters encoderParameters = new EncoderParameters(1);
+                    encoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, quality);
+                    string output = $"compressed{Guid.NewGuid()}.png";
+                    
+                    resizedImage.Save(output, pngEncoder, encoderParameters);
+
+                    return output;
+                }
+            }
+        }
+
+        public ImageCodecInfo GetEncoder(ImageFormat format)
+        {
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
+            foreach (ImageCodecInfo codec in codecs)
+            {
+                if (codec.FormatID == format.Guid)
+                {
+                    return codec;
+                }
+            }
+            return null;
         }
     }
 }
-
-
-

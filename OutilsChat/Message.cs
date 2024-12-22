@@ -18,7 +18,7 @@ namespace OutilsChat
     {
         private string separator;
         private String[] rawData;
-
+        public byte[] imageData;
         public int Id
         {
             get
@@ -59,6 +59,13 @@ namespace OutilsChat
                     if (i < rawData.Length - 1)
                         concat.Append(this.separator);
                 }
+
+                if (this.imageData != null && this.imageData.Length > 0)
+                {
+                    string stringMp3 = Convert.ToBase64String(this.imageData);
+                    concat.Append(this.separator).Append(stringMp3);
+                }
+
                 return concat.ToString();
             }
 
@@ -66,10 +73,15 @@ namespace OutilsChat
             {
                 ClearData();
                 // Id, Cmd, Param1, Param2, Data
-                String[] tmpData = value.Split(new String[] { this.separator }, 5, StringSplitOptions.None);
-                for (int i = 0; i < tmpData.Length; i++)
+                String[] tmpData = value.Split(new String[] { this.separator }, 6, StringSplitOptions.None);
+                for (int i = 0; i < Math.Min(tmpData.Length, 5); i++)
                 {
                     this.rawData[i] = tmpData[i];
+                }
+
+                if (tmpData.Length == 6)
+                {
+                    this.imageData = Convert.FromBase64String(tmpData[5]);
                 }
             }
         }
@@ -83,12 +95,20 @@ namespace OutilsChat
         public void ClearData()
         {
             this.rawData = new string[] { "", "", "", "", "" };
+            this.imageData = null;
         }
 
         public Message(int id, String texte ):this("")
         {
             this.Id = id;
             this.Texte = texte;
+        }
+
+        public Message(int id, String texte, byte[] imageData):this("")
+        {
+            this.Id = id;
+            this.Texte = texte;
+            this.imageData = imageData;
         }
 
         public String Command
