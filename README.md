@@ -5,8 +5,7 @@
 ## Fonctionnalités principales
 - Communication en temps réel entre les utilisateurs.
 - Gestion des utilisateurs : création, mise à jour, suppression.
-- Création et gestion de salons de discussion.
-- Prise en charge des messages privés entre utilisateurs.
+
 
 ## Technologies utilisées
 - **SignalR** : pour la communication en temps réel.
